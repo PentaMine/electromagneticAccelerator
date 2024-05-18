@@ -74,7 +74,7 @@ func GetDataPointsFromRawSerial(serialExchange string) ([]DataPoint, error) {
 	return dataPoints, nil
 }
 
-func WriteToXSLSFle(dataPoints []DataPoint) error {
+func WriteToXlsxFle(dataPoints []DataPoint) error {
 	f := excelize.NewFile()
 	defer f.Close()
 

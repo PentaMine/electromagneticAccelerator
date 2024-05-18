@@ -1,7 +1,7 @@
 struct LoggerConf {
   bool isActive;
   unsigned long startTime;
-  long duration;
+  float duration;
 };
 
 const int q[] = { 39, 35, 33, 26, 21, 18 };
@@ -41,7 +41,7 @@ void handleInputChangeInterrupt() {
   for (int i = 0; i < 6; i++) {
     states[i] = digitalRead(q[i]);
   }
-  
+
 
   if (logger.isActive) {
     loggerQueue += "sr" + generateReadMessage() + ',' + micros() + '\n';
@@ -134,7 +134,7 @@ void handleReadValues(String text) {
 }
 
 void handleLogValues(String text) {
-  long duration = text.toInt();
+  float duration = text.toFloat();
 
   if (duration <= 0) {
     if (duration == -1) {

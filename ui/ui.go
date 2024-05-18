@@ -110,7 +110,7 @@ func getLogDurationLabel() *wui.Label {
 }
 
 func handleStartRecording(durationInput *wui.EditLine, progressBar *wui.ProgressBar) {
-	duration, err := strconv.Atoi(durationInput.Text())
+	duration, err := strconv.ParseFloat(durationInput.Text(), 64)
 	if err != nil {
 		SetErrorText(err)
 		log.Error(err)
@@ -124,7 +124,7 @@ func handleStartRecording(durationInput *wui.EditLine, progressBar *wui.Progress
 		return
 	}
 
-	go handleRecord(progressBar, int64(duration))
+	go handleRecord(progressBar, duration)
 
 	ClearErrorText()
 }
@@ -162,16 +162,16 @@ func getProgressBar() *wui.ProgressBar {
 	return p
 }
 
-func handleRecord(progressBar *wui.ProgressBar, duration int64) {
+func handleRecord(progressBar *wui.ProgressBar, duration float64) {
 	startTime := time.Now().UnixMilli()
 
-	for time.Now().UnixMilli()-startTime <= duration*1000 {
+	for float64(time.Now().UnixMilli()-startTime) <= duration*1000 {
 		if !serialHandler.IsRecording {
 			progressBar.SetValue(0)
 			return
 		}
 
-		progressBar.SetValue(float64(time.Now().UnixMilli()-startTime) / float64(duration*1000))
+		progressBar.SetValue(float64(time.Now().UnixMilli()-startTime) / (duration * 1000))
 		time.Sleep(10 * time.Millisecond)
 	}
 
@@ -193,7 +193,7 @@ func handleRecord(progressBar *wui.ProgressBar, duration int64) {
 		return
 	}
 
-	err = dataProcessor.WriteToXSLSFle(dataPoints)
+	err = dataProcessor.WriteToXlsxFle(dataPoints)
 	if err != nil {
 		SetErrorText(err)
 		log.Error(err)

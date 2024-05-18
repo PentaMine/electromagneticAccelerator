@@ -69,12 +69,12 @@ func (s *SerialHandler) Close() error {
 
 	return s.port.Close()
 }
-func (s *SerialHandler) StartRecording(duration int) error {
+func (s *SerialHandler) StartRecording(duration float64) error {
 	if s.port == nil {
 		return errors.New("not connected")
 	}
 
-	_, err := s.port.Write([]byte(fmt.Sprintf("l%d\n", duration)))
+	_, err := s.port.Write([]byte(fmt.Sprintf("l%f\n", duration)))
 	if err != nil {
 		return err
 	}
